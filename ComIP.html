@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ComIP Control & Configuration</title>
+  <link rel="stylesheet" href="HESTIA.css" />
+</head>
+<body>
+
+  <!-- Side Navigation -->
+  <div class="sidebar" id="sidebar">
+    <div class="hamburger" onclick="toggleSidebar()">&#9776;</div>
+    <div class="nav">
+      <h2>MENU</h2>
+      <ul>
+        <li onclick="showSection('status')">System Control & Status</li>
+        <li onclick="showSection('config')">System Configuration</li>
+        <li onclick="showSection('logevent')">Log Event</li>
+        <li onclick="showSection('contact')">Contact</li>
+        <li onclick="showSection('device')">Device Credential</li>
+      </ul>
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Upper Navigation -->
+  <div class="topbar">
+   
+  <div id="connStatus">
+  COMIP STATUS: <span id="connText">🔄 DISCONNECTED</span>
+  <span id="connIcon" class="circle-icon red"></span>
+  </div>
+  <div id="batteryStatus">🔋 BATTERY</div>
+  <div id="sirenStatus">🔊 SIREN</div>
+  <div id="wifiStatus">📶 WiFi</div>
+  <div id="lanStatus">🔌 LAN</div>
+  <div id="gsmStatus">📡 GSM</div>
+  <div id="sysStatus">⚙️ SYSTEM</div>
+  <div id="dateTime">DATE-TIME: --/--/-- --:--</div>
+  </div>
+
+  <!-- Main Sections -->
+  <div class="main">
+    
+    <!-- System Control & Status -->
+    <section id="status" class="tab active">
+      <h2>System Control & Status</h2>
+      <div class="zone" id="zoneContainer">
+        <!-- Repeat for 4 zones -->
+        <div class="zone-block">
+          <h3>Zone 1</h3>
+          <button onclick="sendCommand('Z1_EMCP')">EMCP</button>
+          <button onclick="sendCommand('Z1_ISOLATE')">ISOLATE</button>
+          <div class="zone-status" id="z1Status">Status: --</div>
+          <h3>Zone 2</h3>
+          <button onclick="sendCommand('Z2_EMCP')">EMCP</button>
+          <button onclick="sendCommand('Z2_ISOLATE')">ISOLATE</button>
+          <div class="zone-status" id="z2Status">Status: --</div>
+          <h3>Zone 3</h3>
+          <button onclick="sendCommand('Z3_EMCP')">EMCP</button>
+          <button onclick="sendCommand('Z3_ISOLATE')">ISOLATE</button>
+          <div class="zone-status" id="z3Status">Status: --</div>
+          <h3>Zone 4</h3>
+          <button onclick="sendCommand('Z4_EMCP')">EMCP</button>
+          <button onclick="sendCommand('Z4_ISOLATE')">ISOLATE</button>
+          <div class="zone-status" id="z4Status">Status: --</div>
+        </div>
+        <!-- Add Zone 2 to Zone 4 similarly -->
+      </div>
+    </section>
+
+    <!-- System Configuration -->
+    <section id="config" class="tab">
+      <h2>System Configuration</h2>
+
+      <div class="card">
+        <h3>Protocol Setting</h3>
+        <label><input type="radio" name="protocol" value="SIA" onchange="submitProtocol()"> SIA</label>
+        <label><input type="radio" name="protocol" value="CID" onchange="submitProtocol()"> Contact ID</label>
+        <div id="currentProtocol" style="margin-top:10px;"><b>Selected Protocol:</b> --</div>
+      </div>
+
+      <div class="card">
+        <h3>Notification Setting</h3>
+        <label><input type="checkbox" id="notif1"> Call</label>
+        <label><input type="checkbox" id="notif2"> SMS</label>
+        <label><input type="checkbox" id="notif3"> Mail</label>
+        <button onclick="submitNotification()">Submit</button>
+      </div>
+
+      <div class="card">
+        <h3>Date-Time Setup</h3>
+        <input type="datetime-local" id="datetimeInput"/>
+        <button onclick="submitDateTime()">Submit</button>
+      </div>
+
+      <div class="card">
+        <h3>Add New Contact</h3>
+        <input placeholder="SL No." id="slno" maxlength="15"/>
+        <input placeholder="Phone No." id="phone" maxlength="16"/>
+        <input placeholder="Mail" id="email" maxlength="16"/>
+        <button onclick="submitContact()">Submit</button>
+      </div>
+
+      <div class="card">
+        <h3>Add Branch Details</h3>
+        <input placeholder="Branch Name" id="branchName" maxlength="16" class="uppercase"/>
+        <input placeholder="Branch Address" id="branchAddr" maxlength="16" class="uppercase"/>
+        <button onclick="submitBranch()">Submit</button>
+      </div>
+
+      <div class="card">
+        <h3>OTA Update Check</h3>
+        <button onclick="sendCommand('OTA_CHECK')">Check Now</button>
+      </div>
+    </section>
+
+    <!-- Log Event -->
+    <section id="logevent" class="tab">
+    <h2>Log Event</h2>
+    <div id="logTable" class="table-card">-- Logs will load here --</div>
+    </section>
+    <!--contact view-->
+    <section id="contact" class="tab">
+    <h2>Contact</h2>
+    <div id="contactTable" class="table-card">-- Contacts will load here --</div>
+    </section>
+
+    <!-- Device Credential -->
+    <section id="device" class="tab">
+      <h2>Device Credential</h2>
+
+      <div class="card">
+        <h3>MQTT Credential</h3>
+        <input placeholder="Auth" id="mqttAuth" autocomplete="off"/>
+        <input placeholder="User" id="mqttUser"/>
+        <input placeholder="Pass" id="mqttPass" autocomplete="new-password"/>
+        <button onclick="submitMQTT()">Save</button>
+      </div>
+
+      <div class="card">
+        <h3>WiFi Credential</h3>
+        <input placeholder="SSID" id="wifiSSID"/>
+        <input placeholder="Password" id="wifiPass" autocomplete="new-password"/>
+        <button onclick="submitWiFi()">Save</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- JavaScript -->
+  <script src="HESTIA.js"></script>
+
+</body>
+<div class="mobile-header">
+  <div class="hamburger" onclick="toggleSidebar()">&#9776;</div>
+</div>
+</html>
